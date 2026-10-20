@@ -1,4 +1,8 @@
+
 package com.blogmanagement.dto.request;
 
-public class PostRequestDto {
+public record PostRequestDto(
+        String title,
+        String content
+) {
 }
