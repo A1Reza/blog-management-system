@@ -17,18 +17,27 @@ public class PostRepository {
     }
 
     public Optional<Post> findById(Long id) {
-        return HibernateUtil.read(em ->
-                Optional.ofNullable(em.find(Post.class, id))
+        return HibernateUtil.read(entityManager ->
+                entityManager.createQuery(
+                                "SELECT p FROM Post p " +
+                                        "JOIN FETCH p.author " +
+                                        "WHERE p.id = :id",
+                                Post.class
+                        )
+                        .setParameter("id", id)
+                        .getResultStream()
+                        .findFirst()
         );
     }
 
     public List<Post> findAll() {
-        return HibernateUtil.read(em ->
-                em.createQuery(
-                                "SELECT p FROM Post p ORDER BY p.createdAt DESC",
-                                Post.class
-                        )
-                        .getResultList()
+        return HibernateUtil.read(entityManager ->
+                entityManager.createQuery(
+                        "SELECT p FROM Post p " +
+                                "JOIN FETCH p.author " +
+                                "ORDER BY p.createdAt DESC",
+                        Post.class
+                ).getResultList()
         );
     }
 

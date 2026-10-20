@@ -68,6 +68,13 @@
             <version>0.4</version>
         </dependency>
 
+        <!--This library is required to convert LocalDateTime fields to JSON and vice versa.-->
+        <dependency>
+            <groupId>com.fasterxml.jackson.datatype</groupId>
+            <artifactId>jackson-datatype-jsr310</artifactId>
+            <version>${jackson.version}</version>
+        </dependency>
+
 
     </dependencies>
 
