@@ -1,7 +1,9 @@
 
 package com.blogmanagement.repository;
 
+import com.blogmanagement.command.PostToPostResponseDto;
 import com.blogmanagement.config.HibernateUtil;
+import com.blogmanagement.dto.response.PostResponseDto;
 import com.blogmanagement.entity.Post;
 
 import java.util.List;
@@ -57,6 +59,38 @@ public class PostRepository {
 
             em.remove(post);
             return true;
+        });
+    }
+
+    public Post updateAndFetchAuthor(Post post) {
+        return HibernateUtil.executeInTransaction(em -> {
+            Post updatedPost = em.merge(post);
+
+            return em.createQuery(
+                            "SELECT p FROM Post p " +
+                                    "JOIN FETCH p.author " +
+                                    "WHERE p.id = :id",
+                            Post.class
+                    )
+                    .setParameter("id", updatedPost.getId())
+                    .getSingleResult();
+        });
+    }
+
+    public PostResponseDto updateAndConvert(Post post) {
+        return HibernateUtil.executeInTransaction(em -> {
+            Post updatedPost = em.merge(post);
+
+            Post fetchedPost = em.createQuery(
+                            "SELECT p FROM Post p " +
+                                    "JOIN FETCH p.author " +
+                                    "WHERE p.id = :id",
+                            Post.class
+                    )
+                    .setParameter("id", updatedPost.getId())
+                    .getSingleResult();
+
+            return PostToPostResponseDto.convert(fetchedPost);
         });
     }
 }

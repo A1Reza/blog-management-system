@@ -57,7 +57,7 @@ public class PostService {
         post.setTitle(dto.title());
         post.setContent(dto.content());
 
-        return PostToPostResponseDto.convert(postRepository.update(post));
+        return postRepository.updateAndConvert(post);
     }
 
     public void delete(Long postId, Long userId) {
