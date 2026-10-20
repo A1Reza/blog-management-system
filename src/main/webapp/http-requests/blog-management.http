@@ -1,6 +1,9 @@
-### Blog Management System — API Tests
+### ==========================================
+### BLOG MANAGEMENT SYSTEM - API TESTS
+### Base URL: http://localhost:8080/blog_management_system_war_exploded
+### ==========================================
 
-### 1. Register a user
+### 1. Register first user
 POST http://localhost:8080/blog_management_system_war_exploded/api/auth/register
 Content-Type: application/json
 
@@ -12,7 +15,7 @@ Content-Type: application/json
 
 ###
 
-### 2. Login
+### 2. Login first user
 POST http://localhost:8080/blog_management_system_war_exploded/api/auth/login
 Content-Type: application/json
 
@@ -29,13 +32,7 @@ Accept: application/json
 
 ###
 
-### 4. Get a post by ID
-GET http://localhost:8080/blog_management_system_war_exploded/api/posts/1
-Accept: application/json
-
-###
-
-### 5. Create a post
+### 4. Create first post
 POST http://localhost:8080/blog_management_system_war_exploded/api/posts
 Content-Type: application/json
 
@@ -46,7 +43,13 @@ Content-Type: application/json
 
 ###
 
-### 6. Update a post
+### 5. Get post with ID 1
+GET http://localhost:8080/blog_management_system_war_exploded/api/posts/1
+Accept: application/json
+
+###
+
+### 6. Update post with ID 1
 PUT http://localhost:8080/blog_management_system_war_exploded/api/posts/1
 Content-Type: application/json
 
@@ -57,10 +60,220 @@ Content-Type: application/json
 
 ###
 
-### 7. Delete a post
+### 7. Verify updated post
+GET http://localhost:8080/blog_management_system_war_exploded/api/posts/1
+Accept: application/json
+
+###
+
+### 8. Create second post
+POST http://localhost:8080/blog_management_system_war_exploded/api/posts
+Content-Type: application/json
+
+{
+  "title": "Java and Hibernate",
+  "content": "This post discusses Java, Hibernate, and JPA."
+}
+
+###
+
+### 9. Get all posts again
+GET http://localhost:8080/blog_management_system_war_exploded/api/posts
+Accept: application/json
+
+###
+
+### 10. Register second user
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "ali",
+  "email": "ali@example.com",
+  "password": "Ali123456"
+}
+
+###
+
+### 11. Attempt duplicate username registration
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "reza",
+  "email": "another@example.com",
+  "password": "Another123"
+}
+
+###
+
+### 12. Attempt duplicate email registration
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "anotheruser",
+  "email": "reza@example.com",
+  "password": "Another123"
+}
+
+###
+
+### 13. Attempt registration with blank fields
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/register
+Content-Type: application/json
+
+{
+  "username": "",
+  "email": "",
+  "password": ""
+}
+
+###
+
+### 14. Attempt login with incorrect password
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "reza",
+  "password": "WrongPassword123"
+}
+
+###
+
+### 15. Attempt login with nonexistent user
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "nonexistent",
+  "password": "SomePassword123"
+}
+
+###
+
+### 16. Attempt to create a post with a blank title
+POST http://localhost:8080/blog_management_system_war_exploded/api/posts
+Content-Type: application/json
+
+{
+  "title": "",
+  "content": "This post has no title."
+}
+
+###
+
+### 17. Attempt to create a post with blank content
+POST http://localhost:8080/blog_management_system_war_exploded/api/posts
+Content-Type: application/json
+
+{
+  "title": "Empty Content Test",
+  "content": ""
+}
+
+###
+
+### 18. Attempt to get a nonexistent post
+GET http://localhost:8080/blog_management_system_war_exploded/api/posts/99999
+Accept: application/json
+
+###
+
+### 19. Attempt to update a nonexistent post
+PUT http://localhost:8080/blog_management_system_war_exploded/api/posts/99999
+Content-Type: application/json
+
+{
+  "title": "Missing Post",
+  "content": "This post does not exist."
+}
+
+###
+
+### 20. Logout first user
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/logout
+
+###
+
+### 21. Attempt to create a post while logged out
+POST http://localhost:8080/blog_management_system_war_exploded/api/posts
+Content-Type: application/json
+
+{
+  "title": "Unauthorized Post",
+  "content": "This request should fail without authentication."
+}
+
+###
+
+### 22. Login as first user again
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "reza",
+  "password": "Reza123456"
+}
+
+###
+
+### 23. Logout first user before switching accounts
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/logout
+
+###
+
+### 24. Login as second user
+POST http://localhost:8080/blog_management_system_war_exploded/api/auth/login
+Content-Type: application/json
+
+{
+  "username": "ali",
+  "password": "Ali123456"
+}
+
+###
+
+### 25. Attempt to update first user's post as second user
+PUT http://localhost:8080/blog_management_system_war_exploded/api/posts/1
+Content-Type: application/json
+
+{
+  "title": "Unauthorized Update",
+  "content": "Ali should not be able to update Reza's post."
+}
+
+###
+
+### 26. Attempt to delete first user's post as second user
 DELETE http://localhost:8080/blog_management_system_war_exploded/api/posts/1
 
 ###
 
-### 8. Logout
+### 27. Attempt to delete nonexistent post
+DELETE http://localhost:8080/blog_management_system_war_exploded/api/posts/99999
+
+###
+
+### 28. Create a post as second user
+POST http://localhost:8080/blog_management_system_war_exploded/api/posts
+Content-Type: application/json
+
+{
+  "title": "Ali's First Post",
+  "content": "This post belongs to Ali."
+}
+
+###
+
+### 29. Verify second user's post
+GET http://localhost:8080/blog_management_system_war_exploded/api/posts
+Accept: application/json
+
+###
+
+### 30. Logout second user
 POST http://localhost:8080/blog_management_system_war_exploded/api/auth/logout
+
+###
