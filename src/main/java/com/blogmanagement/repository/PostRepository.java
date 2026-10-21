@@ -11,12 +11,14 @@ import java.util.Optional;
 
 public class PostRepository {
 
+
     public Post save(Post post) {
         return HibernateUtil.executeInTransaction(em -> {
             em.persist(post);
             return post;
         });
     }
+
 
     public Optional<Post> findById(Long id) {
         return HibernateUtil.read(entityManager ->
@@ -32,6 +34,7 @@ public class PostRepository {
         );
     }
 
+
     public List<Post> findAll() {
         return HibernateUtil.read(entityManager ->
                 entityManager.createQuery(
@@ -43,11 +46,13 @@ public class PostRepository {
         );
     }
 
+
     public Post update(Post post) {
         return HibernateUtil.executeInTransaction(em ->
                 em.merge(post)
         );
     }
+
 
     public boolean deleteById(Long id) {
         return HibernateUtil.executeInTransaction(em -> {
@@ -61,6 +66,7 @@ public class PostRepository {
             return true;
         });
     }
+
 
     public Post updateAndFetchAuthor(Post post) {
         return HibernateUtil.executeInTransaction(em -> {
@@ -76,6 +82,12 @@ public class PostRepository {
                     .getSingleResult();
         });
     }
+    /*
+    After the merge, the returned object keeps the author lazy. If you access the author immediately after the transaction, you will get a LazyInitializationException (because the EntityManager is closed).
+    This method eagerly loads the author with a JOIN FETCH query in the same transaction.
+    Note: getSingleResult() is used here because after the merge, the record definitely exists.
+    */
+
 
     public PostResponseDto updateAndConvert(Post post) {
         return HibernateUtil.executeInTransaction(em -> {

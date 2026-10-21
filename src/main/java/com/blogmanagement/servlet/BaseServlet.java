@@ -12,6 +12,15 @@ public abstract class BaseServlet extends HttpServlet {
     protected final ObjectMapper objectMapper = new ObjectMapper()
             .findAndRegisterModules();
 
+/*
+findAndRegisterModules(): Automatically finds and registers Jackson modules that are on the classpath.
+ For example:
+jackson-datatype-jsr310 → supports LocalDate, LocalDateTime, etc.
+jackson-datatype-jdk8 → supports Optional
+protected final: available to subclasses and does not change after construction
+ (also preserves the thread-safety of ObjectMapper since it is a shared instance).
+*/
+
     protected <T> T readRequest(
             HttpServletRequest request,
             Class<T> type) throws IOException {
